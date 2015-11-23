@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_UserDefSort" title="[⌂] User Default Sort Options" version_string="1.0.0" version_id="1447261019" url="http://xf.themehouse.io" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Forum" description="XenForo_ControllerPublic_Forum (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThemeHouse_UserDefSort_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="th_userDefaultSort" display_order="2000" debug_only="0"/>
+    <option option_id="th_uesrDefaultSort_updateInForums" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_userDefaultSort" display_order="1"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="option_group_th_userDefaultSort" version_id="1412142037" version_string="1.0.0"><![CDATA[User Default Sort Options by ThemeHouse]]></phrase>
+    <phrase title="option_group_th_userDefaultSort_description" version_id="1412142037" version_string="1.0.0"><![CDATA[Options for the User Default Sort Options by ThemeHouse add-on.]]></phrase>
+    <phrase title="option_th_uesrDefaultSort_updateInForums" version_id="1412142037" version_string="1.0.0"><![CDATA[Update User Preferences in Forums]]></phrase>
+    <phrase title="option_th_uesrDefaultSort_updateInForums_explain" version_id="1412142037" version_string="1.0.0"><![CDATA[If ticked when filters forums by different search options these will immediately override the saved ones in their preferences.]]></phrase>
+    <phrase title="th_override_sort_options_userdefaultsort" version_id="1412268084" version_string="1.0.0"><![CDATA[Override Sort Settings]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="th_account_preferences_userdefaultsort" version_id="1412268084" version_string="1.0.0"><![CDATA[<dl class="ctrlUnit">
+	<dt></dt>
+	<dd><ul>
+		<li><label for="ctrl_override_sort_th"><input type="checkbox" name="override_sort_th" value="1" id="ctrl_override_sort_th" class="Disabler OptOut" {xen:checked "{$visitor.override_sort_th}"} /> {xen:phrase th_override_sort_options_userdefaultsort}:</label>
+		<ul id="ctrl_override_sort_th_Disabler">
+			<li><select name="order" id="ctrl_order" class="textCtrl">
+				<option value="last_post_date" {xen:selected "{$order} == 'last_post_date'"}>{xen:phrase last_message_time}</option>
+				<option value="post_date" {xen:selected "{$order} == 'post_date'"}>{xen:phrase thread_creation_time}</option>
+				<option value="title" {xen:selected "{$order} == 'title'"}>{xen:phrase title_alphabetical}</option>
+				<option value="reply_count" {xen:selected "{$order} == 'reply_count'"}>{xen:phrase number_of_replies}</option>
+				<option value="view_count" {xen:selected "{$order} == 'view_count'"}>{xen:phrase number_of_views}</option>
+				<option value="first_post_likes" {xen:selected "{$order} == 'first_post_likes'"}>{xen:phrase first_message_likes}</option>
+			</select>
+			</li>
+			<li><select name="direction" id="ctrl_direction" class="textCtrl">
+					<option value="desc" {xen:selected "{$orderDirection} == 'desc'"}>{xen:phrase descending_order}</option>
+					<option value="asc" {xen:selected "{$orderDirection} == 'asc'"}>{xen:phrase ascending_order}</option>
+			</select>
+			</li>
+		</ul>
+		</li>
+	</ul></dd>
+			
+<xen:comment>
+	<xen:if is="{$prefixes}">
+		<dt><label for="ctrl_prefix_id">{xen:phrase prefix}:</label></dt>
+		<dd><select name="prefix_id" id="ctrl_prefix_id" class="textCtrl">
+			<option value="0" {xen:selected '!{$prefix_id}'}>({xen:phrase any})</option>
+			<xen:foreach loop="$prefixes" value="$prefix">
+				<option value="{$prefix.prefix_id}" {xen:selected '{$prefix_id} == {$prefix.prefix_id}'}>{xen:helper threadPrefix, $prefix.prefix_id, escaped, ''}</option>
+			</xen:foreach>
+		</select></dd>
+	</xen:if>
+</xen:comment>
+</dl>]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="account_preferences" modification_key="th_accountPReferences_userdefaultsort" description="Addition of sort options to the account preferences form." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#(<h3 class="sectionHeader">{xen:phrase locale}</h3>)#Us]]></find>
+      <replace><![CDATA[<xen:include template="th_account_preferences_userdefaultsort" />
+${0}]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_userDefSort" description="Copyright notice for [⌂] User Default Sort Options" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_userDefaultSort" description="Copyright notice for User Default Sort Options by ThemeHouse" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
